@@ -1,3 +1,5 @@
+package model;
+
 public class Pet {
     private String fullName;
     private TypePet typePet;
