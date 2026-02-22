@@ -3,24 +3,25 @@ package controller;
 import java.util.List;
 
 import dto.Pet;
-import service.FormService;
+import service.FileReaderService;
 import service.PetService;
 import view.PetFormView;
 
 public class PetController {
-    private final FormService formService = new FormService();
+    private final FileReaderService fileReader = new FileReaderService();
     private final PetFormView view = new PetFormView();
     private final PetService petService = new PetService();
 
     public void start() {
-        formService.ensureFormExists();
+        fileReader.ensureFormExists();
 
-        List<String> questions = formService.getAllQuestions();
+        List<String> questions = fileReader.getAllQuestions();
         List<String> answers = view.askAll(questions);
 
         try {
             Pet pet = petService.createPetFromAnswers(answers);
-            showSucessMessage(pet);
+            petService.save(pet);
+            showSucessMessage(pet); 
         } catch (IllegalArgumentException e) {
             System.err.println("Erro ao cadastrar:" + e.getMessage());
         }

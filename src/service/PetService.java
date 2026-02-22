@@ -1,10 +1,18 @@
 package service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import dto.*;
 
 public class PetService {
+
+    private static String FOLDER = "petsCadastrados";
 
     public Pet createPetFromAnswers(List<String> answers) {
         try {
@@ -55,5 +63,35 @@ public class PetService {
         if (s.startsWith("f"))
             return Sex.FEMALE;
         throw new IllegalArgumentException("Sexo inválido (use Macho ou Fêmea)");
+    }
+
+    public void save(Pet pet) {
+        try {
+            Path dir = Paths.get(FOLDER);
+            if (!Files.exists(dir))
+                Files.createDirectories(dir);
+
+            String fileName = generateFileName(pet);
+            Path file = dir.resolve(fileName);
+
+            List<String> lines = List.of(
+                    "1 - " + pet.getFullName(),
+                    "2 - " + pet.getTypePet().name(),
+                    "3 - " + pet.getSex().name(),
+                    "4 - " + pet.getAddress().toString(),
+                    "5 - " + pet.getAge() + " anos",
+                    "6 - " + pet.getWeight() + "kg",
+                    "7 - " + pet.getRace());
+
+            Files.write(file, lines);
+        } catch (IOException e) {
+            throw new RuntimeException("Falha ao acessar o disco: " + e.getMessage());
+        }
+    }
+
+    private String generateFileName(Pet pet) {
+        String ts = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmm"));
+        String name = pet.getFullName().toUpperCase().replace(" ", "");
+        return ts + "-" + name + ".TXT";
     }
 }
