@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class FormService {
+public class FileReaderService {
     private final static Path pathForm = Paths.get("src", "data", "formulario.txt");
     private static final String DEFAULT_QUESTIONS = "1 - Qual o nome e sobrenome do pet?\n" +
             "2 - Qual o tipo do pet (Cachorro/Gato)?\n" +
