@@ -8,9 +8,15 @@ import service.PetService;
 import view.PetFormView;
 
 public class PetController {
-    private final FileReaderService fileReader = new FileReaderService();
-    private final PetFormView view = new PetFormView();
-    private final PetService petService = new PetService();
+    private final FileReaderService fileReader; 
+    private final PetFormView view;
+    private final PetService petService;
+
+    public PetController(PetService petService, PetFormView view, FileReaderService fileReaderService) {
+        this.petService = petService;
+        this.view = view;
+        this.fileReader = fileReaderService;
+    }
 
     public void start() {
         fileReader.ensureFormExists();
