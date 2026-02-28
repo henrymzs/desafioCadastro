@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Scanner;
 
 import controller.PetRegistrationController;
-import dto.Address;
-import dto.Pet;
-import dto.Sex;
-import dto.TypePet;
+import model.Address;
+import model.Pet;
+import model.enums.Sex;
+import model.enums.TypePet;
 
 public class ConsoleInteraction {
     private final PetRegistrationController petRegistrationController;

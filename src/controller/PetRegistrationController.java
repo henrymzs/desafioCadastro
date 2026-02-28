@@ -2,8 +2,8 @@ package controller;
 
 import java.util.Map;
 
-import dto.Address;
-import dto.Pet;
+import model.Address;
+import model.Pet;
 import repository.PetRepository;
 
 public class PetRegistrationController {

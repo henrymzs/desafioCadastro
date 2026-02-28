@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dto.Address;
-import dto.Pet;
+import model.Address;
+import model.Pet;
 
 public class FileReaderService {
     private final static Path pathForm = Paths.get("src", "data", "formulario.txt");

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import dto.Pet;
+import model.Pet;
 
 public class PetRepository {
     private static final String FOLDER = "petCadastrados";
