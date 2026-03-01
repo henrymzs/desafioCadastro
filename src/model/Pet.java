@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Map;
+import java.nio.file.Path;
 
 import model.enums.Sex;
 import model.enums.TypePet;
@@ -13,6 +13,7 @@ public class Pet {
     private Double weight;
     private Double age;
     private Address address;
+    private Path filePath;
 
     public static final String NOT_PROVIDED = "NÃO INFORMADO";
 
@@ -27,59 +28,23 @@ public class Pet {
                 "Endereço: " + address;
     }
 
-    public Pet() { } 
+    public Pet() {
+    }
 
-    public Pet(Map<String, String> data, Address address) {
-        setFullName(data.get("fullName"));
-        setRace(data.get("race"));
+    public Pet(String fullName, TypePet typePet, Sex sex, String race, Double weight, Double age, Address address) {
+        setFullName(fullName); 
+        setRace(race); 
+        setWeight(weight); 
+        setAge(age); 
 
-        this.typePet = parseType(data.get("type"));
-        this.sex = parseSex(data.get("sex"));
-        this.weight = parseWeight(data.get("weight"));
-        this.age = parseAge(data.get("age"));
+        if (typePet == null)
+            throw new IllegalArgumentException("O tipo de pet é obrigatório");
+
+        this.typePet = typePet;
+        this.sex = sex;
         this.address = address;
     }
-
-    private TypePet parseType(String value) {
-        if (value == null || value.equalsIgnoreCase(NOT_PROVIDED) || value.isBlank()) {
-            throw new IllegalArgumentException("O tipo de pet (Cachorro/Gato) é obrigatório");
-        }
-        return TypePet.fromUserInput(value);
-    }
-
-    private Sex parseSex(String value) {
-        if (value == null || value.equalsIgnoreCase(NOT_PROVIDED) || value.isBlank()) {
-            return null;
-        }
-        return Sex.fromUserInput(value);
-    }
-
-    private Double parseAge(String value) {
-        if (value == null || value.isBlank() || value.equalsIgnoreCase(NOT_PROVIDED)) {
-            return null;
-        }
-        try {
-            double v = Double.parseDouble(value.replace(",", "."));
-            setAge(v);
-            return v;
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("O valor da idade deve ser um número.");
-        }
-    }
-
-    private Double parseWeight(String value) {
-        if (value == null || value.isBlank() || value.equalsIgnoreCase(NOT_PROVIDED)) {
-            return null;
-        }
-        try {
-            double v = Double.parseDouble(value.replace(",", "."));
-            setWeight(v);
-            return v;
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("O peso deve ser um número válido.");
-        }
-    }
-
+   
     public void setFullName(String fullName) {
         if (fullName == null || fullName.trim().isEmpty() || fullName.equalsIgnoreCase(NOT_PROVIDED)) {
             this.fullName = NOT_PROVIDED;
@@ -87,15 +52,12 @@ public class Pet {
         }
 
         String trimmed = fullName.trim();
-
         if (!trimmed.matches("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$")) {
             throw new IllegalArgumentException("Nome contém caracteres inválidos.");
         }
-
         if (trimmed.split("\\s+").length < 2) {
             throw new IllegalArgumentException("É necessário informar nome e sobrenome.");
         }
-
         this.fullName = trimmed;
     }
 
@@ -104,18 +66,18 @@ public class Pet {
             this.race = NOT_PROVIDED;
             return;
         }
-
         if (!race.matches("^[A-Za-zÀ-ÖØ-öø-ÿ ]+$")) {
             throw new IllegalArgumentException("Raça não pode conter números ou caracteres especiais.");
         }
         this.race = race.trim();
     }
 
-    public void setWeight(Double weigth) {
-        if (weigth != null && (weigth > 60 || weigth < 0.5)) {
+    public void setWeight(Double weight) {
+        // Agora aceita Double diretamente, sem precisar de parse interno
+        if (weight != null && (weight > 60 || weight < 0.5)) {
             throw new IllegalArgumentException("Peso inválido (0.5kg - 60kg).");
         }
-        this.weight = weigth;
+        this.weight = weight;
     }
 
     public void setAge(Double age) {
@@ -123,6 +85,14 @@ public class Pet {
             throw new IllegalArgumentException("Idade deve ser entre 0 e 20 anos.");
         }
         this.age = age;
+    }
+
+    public Path getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(Path filePath) {
+        this.filePath = filePath;
     }
 
     public String getWeightFormatted() {
