@@ -1,22 +1,36 @@
 import java.io.IOException;
 
 import controller.PetRegistrationController;
-import repository.PetRepository;
+import controller.PetSearchController;
+import repository.PetRepositoryImpl;
 import service.FileReaderService;
+import service.FileWriterService;
+import service.PetServiceSearch;
 import view.ConsoleInteraction;
 
 public class Main {
   public static void main(String[] args) throws IOException, InterruptedException {
+    try {
+      FileReaderService fileReader = new FileReaderService();
+      FileWriterService fileWriter = new FileWriterService();
 
-    FileReaderService fileReader = new FileReaderService();
+      PetRepositoryImpl repository = PetRepositoryImpl.getInstance(fileReader, fileWriter);
 
-    PetRepository repository = new PetRepository();
+      PetServiceSearch petServiceSearch = new PetServiceSearch(repository);
 
-    PetRegistrationController registrationController = new PetRegistrationController(repository);
+      PetRegistrationController registrationController = new PetRegistrationController(repository);
 
-    ConsoleInteraction interaction = new ConsoleInteraction(registrationController);
-    fileReader.getAllQuestions();
+      PetSearchController searchController = new PetSearchController(repository, petServiceSearch);
 
-    interaction.start();
+      ConsoleInteraction interaction = new ConsoleInteraction(registrationController, searchController);
+
+      fileReader.getAllQuestions();
+
+      interaction.start();
+
+    } catch (Exception e) {
+      System.err.println("Erro fatal ao iniciar a aplicação: " + e.getMessage());
+      e.printStackTrace();
+    }
   }
 }
